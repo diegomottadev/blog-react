@@ -17,6 +17,9 @@ class Main extends Component{
                             <NavLink to="/" activeClassName="active">Home</NavLink>
                         </li>
                         <li className="nav-item">
+                            <NavLink to="/blog" activeClassName="active">Blog</NavLink>
+                        </li>
+                        <li className="nav-item">
                             <NavLink to="/about" activeClassName="active">About</NavLink>
                         </li>
                         <li className="nav-item">
