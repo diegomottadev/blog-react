@@ -8,16 +8,15 @@ class Articles extends Component {
     url = Global.url;
     state = {
         articles: [],
-        statu: null
+        status: null
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         var home = this.props.home;
         var search = this.props.search;
-        console.log(home);
         if (home === 'true') {
             this.getLastArticles();
-        } else if (search && search != null && search != undefined) {
+        } else if (search && search !== null && search !== undefined) {
             this.getArticlesBySearch(search);
         } else {
             this.getArticles();
@@ -49,24 +48,22 @@ class Articles extends Component {
 
     getArticlesBySearch = (searched) => {
         axios.get(this.url + "search/" + searched).then(res => {
-            if (res.data.article) {
-                this.setState({
-                    articles: res.data.articles,
-                    status: 'success'
-                });
-            } else {
-                this.setState({
-                    articles: res.data.articles,
-                    status: 'failed'
-                });
-            }
+            this.setState({
+                articles: res.data.articles,
+                status: 'success'
+            });
 
+        }).catch(err => {
+            this.setState({
+                articles: [],
+                status: 'success'
+            });
         });
     }
     render() {
         if (this.state.articles.length >= 1) {
             return (
-                <section className="container">
+                <section className="container cabecera">
                     <div className="row">
                         <div className="col-md-5 offset-md-2">
                             {
@@ -79,40 +76,48 @@ class Articles extends Component {
                             <div className="clearfix">
                                 <a className="btn btn-primary float-right" href="fake_url">Older Posts &rarr;</a>
                             </div>
-                            
+
                         </div>
-                        <SideBar/>
+                        <SideBar />
                     </div>
                 </section>
             )
-        } else if (this.state.articles.length === 0 && this.state.statu === 'success') {
+        } else if (this.state.articles.length === 0 && this.state.status === 'success') {
 
             return (
                 <section className="container cabecera">
                     <div className="row">
-                        <div className="post-preview">
-                            <h2 className="post-title">
-                                No hay articulos
+                        <div className="col-md-5 offset-md-2">
+                            <div className="post-preview">
+                                <h2 className="post-title">
+                                    No hay articulos
                                         </h2>
-                            <h3 className="post-subtitle">
-                                Todavia no hay contenidos en esta sección
+                                <h3 className="post-subtitle">
+                                    Todavia no hay contenidos en esta sección
                                         </h3>
+                            </div>
                         </div>
+                        <SideBar />
                     </div>
+                    
                 </section>)
         } else {
             return (
                 <section className="container cabecera">
                     <div className="row">
-                        <div className="post-preview">
-                            <h2 className="post-title">
-                                Cargando articulos ...
-                                </h2>
-                            <h3 className="post-subtitle">
-                                Espere por favor
-                                </h3>
+                        <div className="col-md-5 offset-md-2">
+                            <div className="post-preview">
+                                <h2 className="post-title">
+                                    Cargando articulos ...
+                                    </h2>
+                                <h3 className="post-subtitle">
+                                    Espere por favor
+                                    </h3>
+                            </div>
                         </div>
+                        <SideBar />
                     </div>
+                  
                 </section>
             )
         }

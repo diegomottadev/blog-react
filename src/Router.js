@@ -9,7 +9,7 @@ import Main from './components/Main';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import Search from './components/Search';
-import SideBar from "./components/SideBar";
+import CreateArticle from "./components/CreateArticle";
 class Router extends Component{
 
     render(){
@@ -22,18 +22,18 @@ class Router extends Component{
                     <Route exact path="/contact" component={Contacto}  />
                     <Route exact path="/about" component={About}  />
                     <Route exact path="/blog/busqueda/:search" component={Search}  />
-                    
-                    <Route exact path="/redirect/:search" render={() =>(
+                    <Route exact path="/sample-post/:id" component={SamplePost}  />
+                    <Route exact path="/blog/create" component={CreateArticle}  />
+
+                    <Route exact path="/redirect/:search" render={
+                        
                        (props)=>{
                            var search = props.match.params.search;
-                           return (<Redirect to={'/blog/search'+search}/>)
+                           console.log(search)
+                           return (<Redirect to={'/blog/busqueda/'+search}/>)
                        }
-                    )
+                    
                     }/>
-
-                    <Route exact path="/sample-post/:id" render={() =>(
-                        <h1>Pagina individual</h1>
-                    )
                     }/>
                     <Route component={Error} />
                 </Switch>

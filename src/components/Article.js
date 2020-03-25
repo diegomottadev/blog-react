@@ -3,11 +3,12 @@ import ImgNotFound from '../assets/img/not_found.png';
 import Moment from 'react-moment';
 import 'moment/locale/es';
 import {Link} from 'react-router-dom';
+import Global from "../Global";
 class Article extends Component{
 
-
+    url = Global.url;
     render(){
-        const {_id, title, subtitle,img,date} = this.props.article
+        const {_id, title, content,image,date} = this.props.article
 
         return(
           <article className="post-preview">
@@ -17,10 +18,10 @@ class Article extends Component{
                   {title}
               </h2>
               <h3 className="post-subtitle">
-                {subtitle}
+                {content}
               </h3>
-              { img !== "" ? (
-                <img src={img} className="rounded" alt="Cinque Terre" width="400" height="300" /> 
+              { image !== null ? (
+                <img src={this.url+'get-image/'+image} className="rounded" alt={this.title} width="400" height="300" /> 
               ):(
                 <img src={ImgNotFound} className="rounded" alt="Not found" width="400" height="300" /> 
               )
