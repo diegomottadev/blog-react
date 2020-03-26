@@ -6,11 +6,11 @@ import Header from './Header';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 
-class CreateArticle extends Component {
-
+class EditArticle extends Component {
 
     // Create the ref
     url = Global.url;
+    articleId = null;
     title = React.createRef();
     content = React.createRef();
     description = React.createRef();
@@ -32,7 +32,7 @@ class CreateArticle extends Component {
             article: {
                 title: this.title.current.value,
                 content: this.content.current.value,
-                image: "",
+                image: this.state.article.imagen,
                 date: new Date()
             }
         });
@@ -46,7 +46,7 @@ class CreateArticle extends Component {
 
 
 
-            axios.post(this.url + "save", this.state.article).then(res => {
+            axios.put(this.url + "article/"+this.articleId, this.state.article).then(res => {
                 if (res.data.article) {
                     this.setState({
                         article: res.data.article,
@@ -106,11 +106,22 @@ class CreateArticle extends Component {
     }
 
     componentWillMount() {
+        this.articleId = this.props.match.params.id
+        this.getArticle(this.articleId );
         this.validator = new SimpleReactValidator({
             messages:{
                 required: "Este campo es requerido"
    
             }
+        });
+    }
+
+    getArticle=(id)=>{
+        axios.get(this.url+'/article/'+id).then(res=>{
+            this.setState({
+                article: res.data.article,
+                status: null
+            })
         });
     }
 
@@ -120,36 +131,43 @@ class CreateArticle extends Component {
                 <Redirect to="/blog"></Redirect>
             )
         }
-
+        var article = this.state.article;
         return (
             <div>
                 <Header titulo="Create Article" />
                 <section className="container cabecera">
                     <div className="row">
-                        <h2 className="post-title">Crear articulos</h2>
+                        <h2 className="post-title">Editar articulos</h2>
                     </div>
-                    <div className="row">
-                        <form className="form" onSubmit={this.saveArticle}>
-                            <div className="form-group">
-                                <label htmlFor="title">Titulo</label>
-                                <input type="text" className="form-control" name="title" ref={this.title} onChange={this.changeState} />
-                                {this.validator.message('title', this.state.article.title, 'required|alpha_num_space')}
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="title">Content</label>
-                                <textarea type="text" className="form-control" name="subtitle" ref={this.content} onChange={this.changeState} />
-                                {this.validator.message('title', this.state.article.title, 'required')}
-
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="file0">Archivo</label>
-                                <input type="file" className="form-control" name="file0" onChange={this.fileChange} />
-                            </div>
-
-                            <input type='submit' value="Guardar" className="btn btn-success"></input>
-                        </form>
-                    </div>
+                    {this.state.article.title &&
+                        <div className="row">
+                            <form className="form" onSubmit={this.saveArticle}>
+                                <div className="form-group">
+                                    <label htmlFor="title">Titulo</label>
+                                    <input type="text" className="form-control" name="title" defaultValue={article.title} ref={this.title} onChange={this.changeState} />
+                                    {this.validator.message('title', this.state.article.title, 'required|alpha_num_space')}
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="title">Content</label>
+                                    <textarea type="text" className="form-control" name="subtitle" defaultValue={article.content}  ref={this.content} onChange={this.changeState} />
+                                    {this.validator.message('title', this.state.article.title, 'required')}
+    
+                                </div>
+    
+                                <div className="form-group">
+                                    <label htmlFor="file0">Archivo</label>
+                                    <input type="file" className="form-control" name="file0" onChange={this.fileChange} />
+                                </div>
+    
+                                <input type='submit' value="Guardar" className="btn btn-success"></input>
+                            </form>
+                        </div>
+                    }
+                    {!this.state.article.title && 
+                        <div className="row">
+                            <h2 className="post-title">Cargando articulo</h2>
+                        </div>
+                    }
                 </section>
             </div>
 
@@ -157,4 +175,4 @@ class CreateArticle extends Component {
 
     }
 }
-export default CreateArticle;
+export default EditArticle;

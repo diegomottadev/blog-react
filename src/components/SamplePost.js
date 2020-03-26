@@ -5,7 +5,8 @@ import 'moment/locale/es';
 import Header from "./Header";
 import Global from "../Global";
 import axios from 'axios';
-
+import { Redirect, Link } from 'react-router-dom';
+import swal from 'sweetalert';
 class SamplePost extends Component {
 
 
@@ -33,11 +34,32 @@ class SamplePost extends Component {
         });
     }
 
+deleteArticle = (id)=>{
+    axios.delete(this.url+'article/'+id).then(res =>{
+        this.setState({
+            article: res.data.article,
+            status: 'deleted'
+        })
+        swal(
+            'Articulo elimado',
+            'El articulo a sido eleiminado correctamente',
+            'success'
+        )
+    })
+}
+
     componentWillMount() {
         this.getArticle();
     }
 
     render() {
+
+        if(this.state.status === 'deleted'){
+            return(
+                <Redirect to="/blog"></Redirect>
+            );
+        }
+
         var article = this.state.article;
         return (
             <div>
@@ -81,13 +103,15 @@ class SamplePost extends Component {
                                             <a href="fake_url">Start Bootstrap</a>
                                             on <Moment locale="es" fromNow>{article.date}</Moment></p>
 
-                                            <a href="sampleurl" className="btn btn-warning">
-                                                Editar            
-                                            </a>
+                                            <button onClick={()=>{
+                                                this.deleteArticle(article._id)
+                                            }} href="sampleurl" className="btn btn-danger">
+                                                Eliminar            
+                                            </button>
 
-                                            <a href="sampleurl" className="btn btn-danger">
-                                                Eliminar       
-                                            </a>
+                                            <Link to={"/blog/edit/"+article._id} className="btn btn-warning">
+                                                Editar       
+                                            </Link>
                                         </div>
 
 
